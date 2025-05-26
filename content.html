@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Details - CineStream</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Mobile Layout Styles */
+        @media screen and (max-width: 768px) {
+            .hero-section {
+                position: relative;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .hero-backdrop {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1;
+            }
+
+            .hero-backdrop img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .backdrop-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.9) 100%);
+                z-index: 2;
+            }
+
+            .floating-content {
+                position: relative;
+                z-index: 3;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+                margin-top: 60px;
+            }
+
+            .content-poster {
+                width: 200px;
+                height: 300px;
+                margin-bottom: 20px;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            }
+
+            .content-poster img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .content-info {
+                width: 100%;
+                text-align: center;
+                padding: 0;
+            }
+
+            .content-header h1 {
+                font-size: 24px;
+                margin-bottom: 15px;
+                color: #fff;
+            }
+
+            .content-meta {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+
+            .content-meta span {
+                background: rgba(255,255,255,0.1);
+                padding: 8px 15px;
+                border-radius: 20px;
+                font-size: 14px;
+                color: #fff;
+            }
+
+            .series-meta {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                margin: 15px 0;
+            }
+
+            .series-meta span {
+                background: rgba(255,255,255,0.1);
+                padding: 8px 15px;
+                border-radius: 20px;
+                font-size: 14px;
+                color: #fff;
+            }
+
+            .description {
+                background: rgba(255,255,255,0.1);
+                padding: 15px;
+                border-radius: 10px;
+                margin: 15px 0;
+                font-size: 14px;
+                line-height: 1.6;
+                color: #fff;
+            }
+
+            .action-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 20px;
+            }
+
+            .action-buttons button {
+                width: 100%;
+                padding: 15px;
+                border: none;
+                border-radius: 25px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .primary-btn {
+                color: #fff;
+            }
+
+            .secondary-btn {
+                background: rgba(255,255,255,0.1);
+                color: #fff;
+            }
+
+            .share-btn {
+                background: rgba(255,255,255,0.1);
+                color: #fff;
+            }
+
+            /* Tabs Section */
+            .additional-info {
+                position: relative;
+                z-index: 3;
+                background: rgba(0,0,0,0.8);
+                border-radius: 20px 20px 0 0;
+                margin-top: -20px;
+                padding: 20px;
+            }
+
+            .info-tabs {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+            .tab-btn {
+                margin: 10px;
+                flex: 1;
+                min-width: 120px;
+                padding: 12px;
+                border: none;
+                border-radius: 25px;
+                color: #fff;
+                font-size: 14px;
+                cursor: pointer;
+            }
+
+            .tab-btn.active {
+                background: var(--primary-color);
+            }
+
+            /* Content Grids */
+            .details-grid,
+            .similar-grid,
+            .cast-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+                padding: 10px 0;
+            }
+
+            .detail-card,
+            .movie-card,
+            .series-card,
+            .cast-card {
+                background: rgba(255,255,255,0.1);
+                border-radius: 10px;
+                color: #fff;
+            }
+
+            /* Episodes Section */
+            .episodes-section {
+                margin-top: 20px;
+            }
+
+            .season-selector {
+                width: 100%;
+                padding: 12px;
+                background: rgba(255,255,255,0.1);
+                border: none;
+                border-radius: 25px;
+                color: #fff;
+                margin-bottom: 15px;
+            }
+
+            .episodes-list {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .episode-card {
+                background: rgba(255,255,255,0.1);
+                border-radius: 10px;
+                padding: 15px;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .episode-number {
+                font-size: 18px;
+                font-weight: bold;
+                color: var(--primary-color);
+            }
+
+            .episode-info {
+                flex: 1;
+            }
+
+            .episode-title {
+                font-size: 16px;
+                color: #fff;
+                margin-bottom: 5px;
+            }
+
+            .episode-duration {
+                font-size: 14px;
+                color: rgba(255,255,255,0.7);
+            }
+
+            .episode-play {
+                padding: 10px;
+                background: var(--primary-color);
+                border: none;
+                border-radius: 50%;
+                color: #fff;
+                cursor: pointer;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="search">
+                <div class="search-icon">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+                <div class="search-input-container">
+                    <input type="text" placeholder="Search for movies or series..." style="padding: 15px 15px;">
+                </div>
+            </div>
+            <div class="name-wab">
+                <p>CineStream</p>
+            </div>
+            <div class="user-list">
+                <div class="list-siting">
+                    <button class="list-siting-button">
+                        <i class="fa-solid fa-bars"></i>
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    <div class="list-siting-item">
+                        <button onclick="window.location.href='index.html'">
+                            <i class="fas fa-home"></i>
+                            Home
+                        </button>
+                        <button onclick="window.location.href='movies.html'">
+                            <i class="fas fa-film"></i>
+                            Movies
+                        </button>
+                        <button onclick="window.location.href='series.html'">
+                            <i class="fas fa-tv"></i>
+                            Series
+                        </button>
+                        <button onclick="window.location.href='all-content.html'">
+                            <i class="fas fa-th-large"></i>
+                            All Content
+                        </button>
+                    </div>
+                </div>
+                <div class="user-icon">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="user-dropdown">
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div class="user-details">
+                            <h4>Username</h4>
+                            <p>user@email.com</p>
+                        </div>
+                    </div>
+                    <div class="user-menu">
+                        <button>
+                            <i class="fa-solid fa-user-gear"></i>
+                            Profile Settings
+                        </button>
+                        <button>
+                            <i class="fa-solid fa-bell"></i>
+                            Notifications
+                        </button>
+                        <button>
+                            <i class="fa-solid fa-gear"></i>
+                            Settings
+                        </button>
+                        <button class="logout-btn">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Details -->
+        <div class="content">
+            <div class="content-details">
+                <!-- Hero Section with Backdrop -->
+                <div class="hero-section">
+                    <div class="hero-backdrop">
+                        <img id="backdropImage" src="" alt="">
+                        <div class="backdrop-overlay"></div>
+                    </div>
+                    
+                    <!-- Floating Content -->
+                    <div class="floating-content">
+                        <div class="content-poster" data-id="" data-type="">
+                            <img id="contentImage" src="" alt="">
+                            <div class="poster-overlay">
+                                <button class="play-btn">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="content-info">
+                            <div class="content-header">
+                                <h1 id="contentTitle"></h1>
+                                <div class="content-meta">
+                                    <span id="contentYear"></span>
+                                    <span id="contentDuration"></span>
+                                    <span id="contentGenre"></span>
+                                    <div class="rating">
+                                        <div class="stars">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <span id="contentRating" class="rating-value"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="seriesInfo" style="display: none;">
+                                <div class="series-meta">
+                                    <span id="contentSeasons"></span>
+                                    <span id="contentEpisodes"></span>
+                                    <span id="contentStatus"></span>
+                                </div>
+                            </div>
+
+                            <p id="contentDescription" class="description"></p>
+
+                            <div class="action-buttons">
+                                <button class="primary-btn">
+                                    <i class="fas fa-play"></i>
+                                    Watch Now
+                                </button>
+                                <button class="secondary-btn">
+                                    <i class="fas fa-plus"></i>
+                                    Add to List
+                                </button>
+                                <button class="share-btn">
+                                    <i class="fas fa-share-alt"></i>
+                                    Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Info Section -->
+                <div class="additional-info">
+                    <div class="info-tabs">
+                        <button class="tab-btn active" data-tab="details">Details</button>
+                        <button class="tab-btn" data-tab="cast">Cast & Crew</button>
+                        <button class="tab-btn" data-tab="similar">Similar</button>
+                        <button class="tab-btn" data-tab="reviews">Reviews</button>
+                    </div>
+
+                    <div class="tab-content">
+                        <!-- Details Tab -->
+                        <div class="tab-pane active" id="details">
+                            <div class="details-grid">
+                                <div class="detail-card">
+                                    <h3>Director</h3>
+                                    <p id="contentDirector"></p>
+                                </div>
+                                <div class="detail-card">
+                                    <h3>Cast</h3>
+                                    <p id="contentCast"></p>
+                                </div>
+                                <div class="detail-card">
+                                    <h3>Language</h3>
+                                    <p id="contentLanguage"></p>
+                                </div>
+                                <div class="detail-card">
+                                    <h3>Country</h3>
+                                    <p id="contentCountry"></p>
+                                </div>
+                                <div class="detail-card">
+                                    <h3>Awards</h3>
+                                    <p id="contentAwards"></p>
+                                </div>
+                                <div class="detail-card">
+                                    <h3>Budget</h3>
+                                    <p id="contentBudget"></p>
+                                </div>
+                                <div class="detail-card">
+                                    <h3>Box Office</h3>
+                                    <p id="contentBoxOffice"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cast & Crew Tab -->
+                        <div class="tab-pane" id="cast">
+                            <div class="cast-grid">
+                                <!-- Cast members will be added dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Similar Content Tab -->
+                        <div class="tab-pane" id="similar">
+                            <div class="similar-grid">
+                                <!-- Similar content will be added dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Reviews Tab -->
+                        <div class="tab-pane" id="reviews">
+                            <div class="reviews-container">
+                                <!-- Reviews will be added dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script type="module">
+        import DataManager from './dataManager.js';
+
+        const dataManager = new DataManager();
+        let currentContent = null;
+
+        // Get content ID and type from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const contentId = parseInt(urlParams.get('id'));
+        const contentType = urlParams.get('type');
+
+        // Function to extract dominant color from image
+        function getDominantColor(imageUrl) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+                    let r = 0, g = 0, b = 0;
+                    let count = 0;
+                    
+                    for(let i = 0; i < imageData.length; i += 4) {
+                        r += imageData[i];
+                        g += imageData[i + 1];
+                        b += imageData[i + 2];
+                        count++;
+                    }
+                    
+                    r = Math.floor(r / count);
+                    g = Math.floor(g / count);
+                    b = Math.floor(b / count);
+                    
+                    resolve({ r, g, b });
+                };
+                img.src = imageUrl;
+            });
+        }
+
+        // Function to apply color theme
+        function applyColorTheme(color) {
+            const { r, g, b } = color;
+            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+            const isDark = brightness < 128;
+            
+            // Set background gradient with backdrop filter
+            document.body.style.background = `linear-gradient(135deg, 
+                rgba(${r}, ${g}, ${b}, 0.95),
+                rgba(${r * 0.5}, ${g * 0.5}, ${b * 0.5}, 0.95)
+            )`;
+            document.body.style.backdropFilter = 'blur(10px)';
+
+            // Set meta info backgrounds with backdrop filter
+            const metaElements = document.querySelectorAll('.content-meta span, .series-meta span');
+            metaElements.forEach(el => {
+                el.style.background = `rgba(${r * 0.2}, ${g * 0.2}, ${b * 0.2}, 0.3)`;
+                el.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+                el.style.backdropFilter = 'blur(10px)';
+                el.style.padding = '20px 25px';
+            });
+
+            // Set description background with backdrop filter
+            const description = document.querySelector('.description');
+            description.style.background = `rgba(${r * 0.15}, ${g * 0.15}, ${b * 0.15}, 0.3)`;
+            description.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+            description.style.backdropFilter = 'blur(10px)';
+            description.style.padding = '20px 25px';
+            
+            // Adjust text colors based on background brightness
+            const textElements = document.querySelectorAll('.content-info h1, .content-meta, .series-meta, .description');
+            textElements.forEach(el => {
+                el.style.color = 'rgba(255, 255, 255, 0.9)';
+            });
+
+            // Add border radius to elements
+            const elementsWithBorderRadius = document.querySelectorAll('.content-meta span, .series-meta span, .description');
+            elementsWithBorderRadius.forEach(el => {
+                el.style.borderRadius = '30px';
+            });
+        }
+
+        // Function to handle tab switching
+        function setupTabs() {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons and panes
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabPanes.forEach(pane => {
+                        pane.classList.remove('active');
+                        pane.style.display = 'none';
+                    });
+
+                    // Add active class to clicked button and corresponding pane
+                    button.classList.add('active');
+                    const tabId = button.getAttribute('data-tab');
+                    const activePane = document.getElementById(tabId);
+                    if (activePane) {
+                        activePane.classList.add('active');
+                        activePane.style.display = 'block';
+                    }
+                });
+            });
+
+            // Show first tab by default
+            if (tabButtons.length > 0 && tabPanes.length > 0) {
+                tabButtons[0].click();
+            }
+        }
+
+        // Load and display content
+        async function loadContent() {
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                
+                // Find content by ID and type
+                const contentId = parseInt(new URLSearchParams(window.location.search).get('id'));
+                const contentType = new URLSearchParams(window.location.search).get('type');
+                
+                let currentContent;
+                if (contentType === 'movie') {
+                    currentContent = data.movies.find(movie => movie.id === contentId);
+                } else {
+                    currentContent = data.series.find(series => series.id === contentId);
+                }
+
+                if (!currentContent) {
+                    console.error('Content not found');
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                // Update page title
+                document.title = `${currentContent.title} - CineStream`;
+
+                // Update content details
+                const backdropImage = document.getElementById('backdropImage');
+                const contentImage = document.getElementById('contentImage');
+                const contentTitle = document.getElementById('contentTitle');
+                const contentYear = document.getElementById('contentYear');
+                const contentDuration = document.getElementById('contentDuration');
+                const contentGenre = document.getElementById('contentGenre');
+                const contentRating = document.getElementById('contentRating');
+                const contentDescription = document.getElementById('contentDescription');
+
+                if (backdropImage) backdropImage.src = currentContent.backdrop || currentContent.image;
+                if (contentImage) contentImage.src = currentContent.image;
+                if (contentImage) contentImage.alt = currentContent.title;
+                if (contentTitle) contentTitle.textContent = currentContent.title;
+                if (contentYear) contentYear.textContent = currentContent.year || 'N/A';
+                if (contentDuration) contentDuration.textContent = currentContent.duration || 'N/A';
+                if (contentGenre) contentGenre.textContent = currentContent.genre || 'N/A';
+                if (contentRating) contentRating.textContent = currentContent.rating || 'N/A';
+                if (contentDescription) contentDescription.textContent = currentContent.description || 'No description available';
+
+                // Update series specific details if it's a series
+                const seriesInfo = document.getElementById('seriesInfo');
+                if (contentType === 'series' && seriesInfo) {
+                    seriesInfo.style.display = 'block';
+                    const seriesMeta = document.querySelector('.series-meta');
+                    if (seriesMeta) {
+                        seriesMeta.innerHTML = `
+                            <span class="episodes">${currentContent.episodes || 0} Episodes</span>
+                            <span class="seasons">${currentContent.seasons || 0} Seasons</span>
+                            <span class="status ${currentContent.status || 'unknown'}">${currentContent.status || 'Unknown'}</span>
+                        `;
+                    }
+                }
+
+                // Load similar content
+                await loadSimilarContent(currentContent, contentType);
+
+                // Load cast information
+                loadCastInfo(currentContent);
+
+                // Initialize tabs
+                setupTabs();
+
+                // Apply color theme
+                if (currentContent.image) {
+                    const color = await getDominantColor(currentContent.image);
+                    applyColorTheme(color);
+                }
+            } catch (error) {
+                console.error('Error loading content:', error);
+            }
+        }
+
+        async function loadSimilarContent(currentContent, contentType) {
+            const similarGrid = document.querySelector('.similar-grid');
+            if (!similarGrid) return;
+
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                
+                let similarContent;
+                if (contentType === 'movie') {
+                    similarContent = data.movies
+                        .filter(movie => movie.id !== currentContent.id)
+                        .map(movie => {
+                            // حساب درجة التشابه
+                            let similarityScore = 0;
+                            
+                            // نفس النوع (genre)
+                            if (movie.genre.toLowerCase().includes(currentContent.genre.toLowerCase())) {
+                                similarityScore += 3;
+                            }
+                            
+                            // نفس السنة تقريباً (±2 سنوات)
+                            if (Math.abs(movie.year - currentContent.year) <= 2) {
+                                similarityScore += 2;
+                            }
+                            
+                            // نفس التقييم تقريباً (±0.5)
+                            if (Math.abs(parseFloat(movie.rating) - parseFloat(currentContent.rating)) <= 0.5) {
+                                similarityScore += 1;
+                            }
+                            
+                            return { ...movie, similarityScore };
+                        })
+                        .sort((a, b) => b.similarityScore - a.similarityScore)
+                        .slice(0, 6);
+                } else {
+                    similarContent = data.series
+                        .filter(series => series.id !== currentContent.id)
+                        .map(series => {
+                            // حساب درجة التشابه
+                            let similarityScore = 0;
+                            
+                            // نفس النوع (genre)
+                            if (series.genre.toLowerCase().includes(currentContent.genre.toLowerCase())) {
+                                similarityScore += 3;
+                            }
+                            
+                            // نفس السنة تقريباً (±2 سنوات)
+                            if (Math.abs(series.year - currentContent.year) <= 2) {
+                                similarityScore += 2;
+                            }
+                            
+                            // نفس التقييم تقريباً (±0.5)
+                            if (Math.abs(parseFloat(series.rating) - parseFloat(currentContent.rating)) <= 0.5) {
+                                similarityScore += 1;
+                            }
+                            
+                            // نفس الحالة (مستمر أو مكتمل)
+                            if (series.status === currentContent.status) {
+                                similarityScore += 1;
+                            }
+                            
+                            return { ...series, similarityScore };
+                        })
+                        .sort((a, b) => b.similarityScore - a.similarityScore)
+                        .slice(0, 6);
+                }
+
+                displaySimilarContent(similarContent, contentType);
+            } catch (error) {
+                console.error('Error loading similar content:', error);
+            }
+        }
+
+        function displaySimilarContent(content, contentType) {
+            const similarGrid = document.querySelector('.similar-grid');
+            similarGrid.innerHTML = '';
+
+            if (content.length === 0) {
+                similarGrid.innerHTML = `
+                    <div class="no-results">
+                        <p>No similar content found</p>
+                    </div>`;
+                return;
+            }
+
+            content.forEach(item => {
+                const card = document.createElement('div');
+                card.className = contentType === 'movie' ? 'movie-card' : 'series-card';
+                card.onclick = () => window.location.href = `content.html?id=${item.id}&type=${contentType}`;
+                
+                card.innerHTML = `
+                    ${contentType === 'series' ? `
+                        <div class="status-indicator ${item.status || 'unknown'}">
+                            <i class="fas ${item.status === 'ongoing' ? 'fa-play-circle' : 'fa-check-circle'}"></i>
+                        </div>
+                    ` : ''}
+                    <img src="${item.image}" alt="${item.title}">
+                    <div class="${contentType === 'movie' ? 'movie-info' : 'series-info'}">
+                        <h3>${item.title}</h3>
+                        <div class="genre">${item.genre || 'N/A'}</div>
+                        <div class="movie-details">
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <span>${item.rating || 'N/A'}</span>
+                            </div>
+                            <div class="duration">
+                                <i class="fas fa-clock"></i>
+                                <span>${item.duration || 'N/A'}</span>
+                            </div>
+                        </div>
+                        ${contentType === 'series' ? `
+                            <div class="episodes">${item.seasons || 0} Seasons | ${item.episodes || 0} Episodes</div>
+                        ` : ''}
+                    </div>
+                    <button class="play-btn" onclick="event.stopPropagation(); window.location.href='content.html?id=${item.id}&type=${contentType}'">
+                        <i class="fas fa-play"></i>
+                    </button>
+                `;
+
+                similarGrid.appendChild(card);
+            });
+        }
+
+        function loadCastInfo(content) {
+            const castGrid = document.querySelector('.cast-grid');
+            if (!castGrid || !content.cast) return;
+
+            castGrid.innerHTML = '';
+
+            content.cast.forEach(person => {
+                const card = document.createElement('div');
+                card.className = 'cast-card';
+                card.innerHTML = `
+                    <img src="${person.image || 'default-avatar.png'}" alt="${person.name}">
+                    <h4>${person.name}</h4>
+                    <p>${person.role || 'Actor'}</p>
+                `;
+                castGrid.appendChild(card);
+            });
+        }
+
+        // Load content when page loads
+        document.addEventListener('DOMContentLoaded', loadContent);
+    </script>
+</body>
+</html> 
